@@ -41,10 +41,20 @@ app.get('/api/patient', async (req, res) => {
 
 app.post('/api/admission', async (req, res) => {
   try {
-    const { patient, encounter, author } = req.body;
+    const { patient, encounter, author, serviceRequest, identityConfirmed } = req.body;
     // Basic server-side validation
     if (!patient || !patient.name || !patient.name[0] || !patient.name[0].family) {
       return res.status(400).json({ error: 'Patient name (family) is required' });
+    }
+    if (!identityConfirmed) {
+      return res.status(422).json({ error: 'Identity must be confirmed by the reception agent' });
+    }
+    const identityExtension = (patient.extension || []).find(extension => extension.url && extension.url.includes('ins-reliability'));
+    if (identityExtension && identityExtension.valueCode && identityExtension.valueCode !== 'qualified') {
+      return res.status(422).json({ error: 'A degraded identity requires biologist review before nominal admission' });
+    }
+    if (!serviceRequest || !serviceRequest.code || !serviceRequest.requester || !serviceRequest.requester.display) {
+      return res.status(422).json({ error: 'Prescription and prescriber are required' });
     }
     // Validate simple INS/NIR format (digits only, 13-15 chars)
     const insVal = (patient.identifier && patient.identifier[0] && patient.identifier[0].value) ? String(patient.identifier[0].value) : null;
@@ -52,10 +62,12 @@ app.post('/api/admission', async (req, res) => {
       return res.status(400).json({ error: 'INS/NIR must be 13-15 digits' });
     }
     // Construire le Bundle transactionnel et le soumettre au serveur FHIR
-    const serviceRequest = req.body.serviceRequest || {};
     const bundle = buildAdmissionBundle(patient, encounter, serviceRequest);
     try {
-      const txResult = await submitTransaction(bundle, { baseUrl: process.env.HAPI_FHIR_BASE || undefined });
+      const txResult = await submitTransaction(bundle, {
+        baseUrl: process.env.HAPI_FHIR_BASE || undefined,
+        validateBundle: true
+      });
       // txResult mapping available for audit
     } catch (err) {
       if (err instanceof TransactionError) {
@@ -68,7 +80,7 @@ app.post('/api/admission', async (req, res) => {
     }
 
     // Générer le HL7 après succès transactionnel
-    const hl7 = generateAdtA04(patient, encounter, author);
+    const hl7 = generateAdtA04(patient, encounter, author, serviceRequest);
 
     // Sauvegarder le HL7 dans out/ avec horodatage
     const ins = insVal || 'noins';

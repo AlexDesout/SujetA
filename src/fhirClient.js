@@ -1,6 +1,7 @@
 const axios = require('axios');
 
 const HAPI_BASE = process.env.HAPI_FHIR_BASE || 'https://hapi.fhir.org/baseR4';
+const INS_NIR_SYSTEM = 'urn:oid:1.2.250.1.213.1.4.8';
 const { validateBundleStructure } = require('./validator');
 
 class TransactionError extends Error {
@@ -20,8 +21,10 @@ class TransientError extends Error {
 }
 
 async function searchPatientByIns(ins, options = {}) {
-  const params = { identifier: ins };
-  const url = `${HAPI_BASE}/Patient`;
+  const baseUrl = options.baseUrl || HAPI_BASE;
+  const identifier = /^\d{13,15}$/.test(String(ins || '')) ? `${INS_NIR_SYSTEM}|${ins}` : ins;
+  const params = { identifier };
+  const url = `${baseUrl}/Patient`;
   const resp = await axios.get(url, { params, timeout: options.timeout || 5000 });
   return resp.data;
 }
@@ -67,6 +70,9 @@ async function submitTransaction(bundle, options = {}) {
       // Unexpected response shape
       return resp.data;
     } catch (err) {
+      if (err instanceof TransactionError || err instanceof TransientError) {
+        throw err;
+      }
       // If axios response exists
       if (err.response) {
         const status = err.response.status;

@@ -69,7 +69,11 @@
             </div>
             <div>
               <label for="p_gender">Genre</label>
-              <select id="p_gender"><option value="F">F</option><option value="M">M</option><option value="other">Autre</option></select>
+              <select id="p_gender"><option value="female">F</option><option value="male">M</option><option value="other">Autre</option></select>
+            </div>
+            <div>
+              <label for="p_ins_status">Statut INS</label>
+              <select id="p_ins_status"><option value="qualified">INS-NIR qualifiée</option><option value="degraded">Identité dégradée</option></select>
             </div>
             <div>
               <label for="p_phone">Téléphone</label>
@@ -95,7 +99,23 @@
               <label for="author_name">Saisie par</label>
               <input id="author_name" name="author_name" placeholder="Nom du secrétaire / médecin" />
             </div>
+            <div>
+              <label for="prescriber_name">Médecin prescripteur</label>
+              <input id="prescriber_name" name="prescriber_name" required placeholder="Ex: Dr Martin" />
+            </div>
+            <div>
+              <label for="prescriber_rpps">RPPS du prescripteur</label>
+              <input id="prescriber_rpps" name="prescriber_rpps" placeholder="Identifiant fictif" />
+            </div>
+            <div>
+              <label for="prescription_date">Date de prescription</label>
+              <input id="prescription_date" name="prescription_date" type="date" required />
+            </div>
           </div>
+          <label style="display:block;margin-top:12px">
+            <input id="identity_confirmed" type="checkbox" required />
+            Identité contrôlée avec la pièce présentée
+          </label>
           <div style="margin-top:12px" class="controls">
             <button type="submit">Enregistrer l'admission</button>
             <button type="button" id="resetForm" class="secondary">Effacer</button>

@@ -30,12 +30,15 @@ document.getElementById('searchForm').addEventListener('submit', async (e) => {
   const given = (patient.name && patient.name[0] && patient.name[0].given) ? patient.name[0].given.join(' ') : '';
   const dob = patient.birthDate || '';
   const gender = patient.gender || '';
+  const reliability = (patient.extension || []).find(extension => extension.url && extension.url.includes('ins-reliability'));
+  const insStatus = (reliability && (reliability.valueCode || reliability.valueString)) || 'non renseigné';
   const addr = (patient.address && patient.address[0]) ? [ (patient.address[0].line || []).join(' '), patient.address[0].city, patient.address[0].postalCode ].filter(Boolean).join(', ') : '';
   const telecom = (patient.telecom || []).map(t => `${t.system}:${t.value}`).join(' | ');
 
   details.innerHTML = `
     <div><strong>${family} ${given}</strong></div>
     <div><small>INS: ${id}</small></div>
+    <div><small>Statut INS: ${insStatus}</small></div>
     <div><small>Né(e): ${dob} — ${gender}</small></div>
     <div><small>Adresse: ${addr}</small></div>
     <div><small>Contacts: ${telecom}</small></div>
@@ -51,7 +54,7 @@ document.getElementById('searchForm').addEventListener('submit', async (e) => {
     document.getElementById('p_family').value = family;
     document.getElementById('p_given').value = given;
     if (dob) document.getElementById('p_birth').value = dob;
-    if (gender) document.getElementById('p_gender').value = (gender==='female'||gender==='F'||gender==='f') ? 'F' : (gender==='male'||gender==='M'||gender==='m') ? 'M' : 'other';
+    if (gender) document.getElementById('p_gender').value = (gender==='female'||gender==='F'||gender==='f') ? 'female' : (gender==='male'||gender==='M'||gender==='m') ? 'male' : 'other';
     document.getElementById('p_phone').value = (patient.telecom && patient.telecom.find(t=>t.system==='phone')) ? patient.telecom.find(t=>t.system==='phone').value : '';
     document.getElementById('p_email').value = (patient.telecom && patient.telecom.find(t=>t.system==='email')) ? patient.telecom.find(t=>t.system==='email').value : '';
     if (patient.address && patient.address[0]) document.getElementById('p_address').value = (patient.address[0].line || []).join(' ')+ (patient.address[0].city? ', '+patient.address[0].city : '');
@@ -87,7 +90,7 @@ document.getElementById('searchForm').addEventListener('submit', async (e) => {
       document.getElementById('p_family').value = family;
       document.getElementById('p_given').value = given;
       if(dob) document.getElementById('p_birth').value = dob;
-      if(gender) document.getElementById('p_gender').value = (gender==='female'||gender==='F'||gender==='f') ? 'F' : (gender==='male'||gender==='M'||gender==='m') ? 'M' : 'other';
+      if(gender) document.getElementById('p_gender').value = (gender==='female'||gender==='F'||gender==='f') ? 'female' : (gender==='male'||gender==='M'||gender==='m') ? 'male' : 'other';
       document.getElementById('p_phone').value = (patientObj.telecom && patientObj.telecom.find(t=>t.system==='phone')) ? patientObj.telecom.find(t=>t.system==='phone').value : '';
       document.getElementById('p_email').value = (patientObj.telecom && patientObj.telecom.find(t=>t.system==='email')) ? patientObj.telecom.find(t=>t.system==='email').value : '';
       if (patientObj.address && patientObj.address[0]) document.getElementById('p_address').value = (patientObj.address[0].line || []).join(' ')+ (patientObj.address[0].city? ', '+patientObj.address[0].city : '');
@@ -106,15 +109,30 @@ document.getElementById('admissionForm').addEventListener('submit', async (e) =>
   e.preventDefault();
   const body = {
     patient: {
-      identifier: [{ system: 'urn:oid:1.2.250.1.213.1', value: document.getElementById('p_ins').value, type: { text: 'INS' } }],
+      identifier: [{ system: 'urn:oid:1.2.250.1.213.1.4.8', value: document.getElementById('p_ins').value, type: { coding: [{ system: 'http://terminology.hl7.org/CodeSystem/v2-0203', code: 'NI' }], text: 'INS-NIR' } }],
       name: [{ family: document.getElementById('p_family').value, given: [document.getElementById('p_given').value] }],
       birthDate: document.getElementById('p_birth').value,
       gender: document.getElementById('p_gender').value,
+      extension: [{ url: 'https://example.org/fhir/StructureDefinition/ins-reliability', valueCode: document.getElementById('p_ins_status').value }],
       telecom: [],
       address: [{ line: [document.getElementById('p_address').value || ''] }]
     },
     encounter: { id: document.getElementById('encounter_id').value, service: document.getElementById('encounter_service').value },
-    author: { name: document.getElementById('author_name').value }
+    author: { name: document.getElementById('author_name').value },
+    identityConfirmed: document.getElementById('identity_confirmed').checked,
+    serviceRequest: {
+      status: 'active',
+      intent: 'order',
+      code: {
+        coding: [{ system: 'http://loinc.org', code: '58410-2', display: 'CBC panel - Blood by Automated count' }],
+        text: 'NFS'
+      },
+      requester: {
+        display: document.getElementById('prescriber_name').value,
+        identifier: document.getElementById('prescriber_rpps').value ? { system: 'urn:oid:1.2.250.1.71.4.2.1', value: document.getElementById('prescriber_rpps').value } : undefined
+      },
+      authoredOn: document.getElementById('prescription_date').value
+    }
   };
   const phone = document.getElementById('p_phone').value;
   const email = document.getElementById('p_email').value;
@@ -171,13 +189,18 @@ document.getElementById('admissionForm').addEventListener('submit', async (e) =>
     document.getElementById('p_family').value='Bernard';
     document.getElementById('p_given').value='Claire';
     document.getElementById('p_birth').value='1985-07-20';
-    document.getElementById('p_gender').value='F';
+    document.getElementById('p_gender').value='female';
+    document.getElementById('p_ins_status').value='qualified';
     document.getElementById('p_phone').value='+33611223344';
     document.getElementById('p_email').value='claire.bernard@example.com';
     document.getElementById('p_address').value='12 rue de Test, Paris';
     document.getElementById('encounter_id').value='enc-042';
     document.getElementById('encounter_service').value='Consultation';
     document.getElementById('author_name').value='Secrétaire';
+    document.getElementById('prescriber_name').value='Dr Martin';
+    document.getElementById('prescriber_rpps').value='801234567';
+    document.getElementById('prescription_date').value='2026-09-15';
+    document.getElementById('identity_confirmed').checked=true;
   });
 
   // Simple client-side validation with friendly focus

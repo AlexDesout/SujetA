@@ -9,14 +9,33 @@ function buildAdmissionBundle(patient, encounter = {}, serviceRequest = {}) {
 
   const patientRes = Object.assign({}, patient);
   patientRes.resourceType = 'Patient';
+  delete patientRes.id;
 
   const encounterRes = Object.assign({}, encounter);
   encounterRes.resourceType = 'Encounter';
+  delete encounterRes.id;
+  encounterRes.status = encounterRes.status || 'in-progress';
+  encounterRes.class = encounterRes.class || {
+    system: 'http://terminology.hl7.org/CodeSystem/v3-ActCode',
+    code: 'AMB',
+    display: 'ambulatory'
+  };
   // link to patient by reference
   encounterRes.subject = { reference: patientFull };
 
   const serviceRequestRes = Object.assign({}, serviceRequest);
   serviceRequestRes.resourceType = 'ServiceRequest';
+  delete serviceRequestRes.id;
+  serviceRequestRes.status = serviceRequestRes.status || 'active';
+  serviceRequestRes.intent = serviceRequestRes.intent || 'order';
+  serviceRequestRes.code = serviceRequestRes.code || {
+    coding: [{
+      system: 'http://loinc.org',
+      code: '58410-2',
+      display: 'CBC panel - Blood by Automated count'
+    }],
+    text: 'NFS'
+  };
   serviceRequestRes.subject = { reference: patientFull };
   // link to encounter if id present
   serviceRequestRes.encounter = { reference: encounterFull };

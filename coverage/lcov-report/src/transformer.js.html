@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">69.23% </span>
+                <span class="strong">90.47% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>27/39</span>
+                <span class='fraction'>38/42</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">57.14% </span>
+                <span class="strong">71.42% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>40/70</span>
+                <span class='fraction'>55/77</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">50% </span>
+                <span class="strong">75% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>2/4</span>
+                <span class='fraction'>3/4</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">78.78% </span>
+                <span class="strong">94.44% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>26/33</span>
+                <span class='fraction'>34/36</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line medium'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -120,40 +120,42 @@
 <a name='L55'></a><a href='#L55'>55</a>
 <a name='L56'></a><a href='#L56'>56</a>
 <a name='L57'></a><a href='#L57'>57</a>
-<a name='L58'></a><a href='#L58'>58</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L58'></a><a href='#L58'>58</a>
+<a name='L59'></a><a href='#L59'>59</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -180,42 +182,43 @@
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">function buildPidSegment(patient) {
   const idObj = (patient &amp;&amp; patient.identifier &amp;&amp; patient.identifier[0]) ? patient.identifier[0] : <span class="branch-1 cbranch-no" title="branch not covered" >null;</span>
   const id = idObj ? idObj.value : <span class="branch-1 cbranch-no" title="branch not covered" >'';</span>
-  // try extract OID from system if urn:oid:... else leave blank
+  // PID-3 uses the INS authority OID and the NI identifier type.
   let authorityOid = '';
-  <span class="missing-if-branch" title="if path not taken" >I</span>if (idObj &amp;&amp; idObj.system) {
-    const m = <span class="cstat-no" title="statement not covered" >String(idObj.system).match(/urn:oid:(.+)$/);</span>
-<span class="cstat-no" title="statement not covered" >    if (m) <span class="cstat-no" title="statement not covered" >authorityOid = m[1];</span></span>
+  if (idObj &amp;&amp; idObj.system) {
+    const m = String(idObj.system).match(/urn:oid:(.+)$/);
+    <span class="missing-if-branch" title="else path not taken" >E</span>if (m) authorityOid = m[1];
   }
 &nbsp;
   const family = (patient &amp;&amp; patient.name &amp;&amp; patient.name[0] &amp;&amp; patient.name[0].family) || <span class="branch-4 cbranch-no" title="branch not covered" >'';</span>
   const given = (patient &amp;&amp; patient.name &amp;&amp; patient.name[0] &amp;&amp; patient.name[0].given) ? patient.name[0].given.join(' ') : <span class="branch-1 cbranch-no" title="branch not covered" >'';</span>
-  const dob = (patient &amp;&amp; patient.birthDate) || <span class="branch-2 cbranch-no" title="branch not covered" >'';</span>
-  const sex = (patient &amp;&amp; patient.gender) || <span class="branch-2 cbranch-no" title="branch not covered" >'';</span>
+  const dob = ((patient &amp;&amp; patient.birthDate) || <span class="branch-2 cbranch-no" title="branch not covered" >'')</span>.replace(/-/g, '');
+  const genderMap = { female: 'F', male: 'M', other: 'O', unknown: 'U' };
+  const sex = genderMap[(patient &amp;&amp; patient.gender) || <span class="branch-2 cbranch-no" title="branch not covered" >'']</span> || ((patient &amp;&amp; patient.gender) || <span class="branch-3 cbranch-no" title="branch not covered" >'')</span>;
 &nbsp;
-  // PID-3: id^^^authorityOID&amp;oid&amp;ISO^NI when authorityOid present
-  const pid3 = authorityOid ? <span class="branch-0 cbranch-no" title="branch not covered" >`${id}^^^${authorityOid}&amp;${authorityOid}&amp;ISO^NI` </span>: `${id}`;
+  const pid3 = authorityOid ? `${id}^^^INS-NIR&amp;${authorityOid}&amp;ISO^NI` : `${id}`;
 &nbsp;
   const pid = `PID|1|${pid3}||${family}^${given}||${dob}|${sex}`;
   return pid;
 }
 &nbsp;
-function generateAdtA04(patient, encounter = <span class="branch-0 cbranch-no" title="branch not covered" >{},</span> author = <span class="branch-0 cbranch-no" title="branch not covered" >{})</span> {
+function generateAdtA04(patient, encounter = <span class="branch-0 cbranch-no" title="branch not covered" >{},</span> author = <span class="branch-0 cbranch-no" title="branch not covered" >{},</span> serviceRequest = null) {
   const pid = buildPidSegment(patient);
-  const msh = 'MSH|^\\\&amp;|ADT_SYSTEM|HOSPITAL|DEST|LAB|' + new Date().toISOString() + '||ADT^A04^ADT_A01|MSG00001|P|2.5.1';
-  const evn = `EVN|A04|${new Date().toISOString()}|${author.name || <span class="branch-1 cbranch-no" title="branch not covered" >'system'}</span>`;
+  const timestamp = new Date().toISOString().replace(/[-:]/g, '').replace(/\.\d{3}Z$/, '');
+  const msh = `MSH|^~\\&amp;|ADT_SYSTEM|HOSPITAL|DEST|LAB|${timestamp}||ADT^A04^ADT_A01|MSG00001|P|2.5.1`;
+  const evn = `EVN|A04|${timestamp}|||${author.name || <span class="branch-1 cbranch-no" title="branch not covered" >'system'}</span>`;
   const pv1 = `PV1|1|O|${(encounter &amp;&amp; encounter.location) || ''}`;
 &nbsp;
-  // Optionally include OBR if encounter.serviceRequest has LOINC coding 58410-2
+  const request = serviceRequest || (encounter &amp;&amp; encounter.serviceRequest);
   let obr = null;
-  <span class="missing-if-branch" title="if path not taken" >I</span>if (encounter &amp;&amp; encounter.serviceRequest &amp;&amp; <span class="branch-2 cbranch-no" title="branch not covered" >encounter.serviceRequest.code </span>&amp;&amp; <span class="branch-3 cbranch-no" title="branch not covered" >Array.isArray(encounter.serviceRequest.code.coding))</span> {
-    const coding = <span class="cstat-no" title="statement not covered" >encounter.serviceRequest.code.coding.find(<span class="fstat-no" title="function not covered" >c </span>=&gt; <span class="cstat-no" title="statement not covered" >c.system === 'http://loinc.org' &amp;&amp; c.code === '58410-2')</span>;</span>
-<span class="cstat-no" title="statement not covered" >    if (coding) {</span>
-<span class="cstat-no" title="statement not covered" >      obr = `OBR|1|||${coding.code}^${coding.display}^LN`;</span>
+  if (request &amp;&amp; request.code &amp;&amp; Array.isArray(request.code.coding)) {
+    const coding = request.code.coding.find(c =&gt; c.system === 'http://loinc.org');
+    <span class="missing-if-branch" title="else path not taken" >E</span>if (coding) {
+      obr = `OBR|1|||${coding.code}^${coding.display || <span class="branch-1 cbranch-no" title="branch not covered" >''}</span>^LN|||${timestamp}`;
     }
   }
 &nbsp;
   const parts = [msh, evn, pid, pv1];
-  <span class="missing-if-branch" title="if path not taken" >I</span>if (obr) <span class="cstat-no" title="statement not covered" >parts.push(obr);</span>
+  if (obr) parts.push(obr);
 &nbsp;
   // INS reliability: look for extension or custom field
   let insReliability = null;
@@ -241,7 +244,7 @@ module.exports = { buildPidSegment, generateAdtA04 };
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-09-15T14:59:37.189Z
+                at 2026-09-15T15:14:36.945Z
             </div>
         <script src="../prettify.js"></script>
         <script>
