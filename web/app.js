@@ -3,7 +3,66 @@ document.getElementById('searchForm').addEventListener('submit', async (e) => {
   const ins = document.getElementById('ins').value;
   const res = await fetch(`/api/patient?ins=${encodeURIComponent(ins)}`);
   const data = await res.json();
-  document.getElementById('result').textContent = JSON.stringify(data, null, 2);
+
+  // Normalize: find Patient resource inside bundle or accept patient resource
+  let patient = null;
+  if (data && data.resourceType === 'Bundle' && Array.isArray(data.entry)) {
+    for (const e of data.entry) {
+      if (e.resource && e.resource.resourceType === 'Patient') { patient = e.resource; break; }
+    }
+  } else if (data && data.resourceType === 'Patient') {
+    patient = data;
+  }
+
+  const details = document.getElementById('patientDetails');
+  const jsonPre = document.getElementById('patientJson');
+  const fillBtn = document.getElementById('fillFromSearch');
+  if (!patient) {
+    details.textContent = 'Aucun patient trouvé.';
+    jsonPre.style.display = 'none';
+    fillBtn.style.display = 'none';
+    return;
+  }
+
+  // Build display
+  const id = (patient.identifier && patient.identifier[0] && patient.identifier[0].value) || '';
+  const family = (patient.name && patient.name[0] && patient.name[0].family) || '';
+  const given = (patient.name && patient.name[0] && patient.name[0].given) ? patient.name[0].given.join(' ') : '';
+  const dob = patient.birthDate || '';
+  const gender = patient.gender || '';
+  const addr = (patient.address && patient.address[0]) ? [ (patient.address[0].line || []).join(' '), patient.address[0].city, patient.address[0].postalCode ].filter(Boolean).join(', ') : '';
+  const telecom = (patient.telecom || []).map(t => `${t.system}:${t.value}`).join(' | ');
+
+  details.innerHTML = `
+    <div><strong>${family} ${given}</strong></div>
+    <div><small>INS: ${id}</small></div>
+    <div><small>Né(e): ${dob} — ${gender}</small></div>
+    <div><small>Adresse: ${addr}</small></div>
+    <div><small>Contacts: ${telecom}</small></div>
+  `;
+
+  jsonPre.textContent = JSON.stringify(patient, null, 2);
+  jsonPre.style.display = 'none';
+  fillBtn.style.display = 'inline-block';
+
+  // Wire fill button
+  fillBtn.onclick = () => {
+    document.getElementById('p_ins').value = id;
+    document.getElementById('p_family').value = family;
+    document.getElementById('p_given').value = given;
+    if (dob) document.getElementById('p_birth').value = dob;
+    if (gender) document.getElementById('p_gender').value = (gender==='female'||gender==='F'||gender==='f') ? 'F' : (gender==='male'||gender==='M'||gender==='m') ? 'M' : 'other';
+    document.getElementById('p_phone').value = (patient.telecom && patient.telecom.find(t=>t.system==='phone')) ? patient.telecom.find(t=>t.system==='phone').value : '';
+    document.getElementById('p_email').value = (patient.telecom && patient.telecom.find(t=>t.system==='email')) ? patient.telecom.find(t=>t.system==='email').value : '';
+    if (patient.address && patient.address[0]) document.getElementById('p_address').value = (patient.address[0].line || []).join(' ')+ (patient.address[0].city? ', '+patient.address[0].city : '');
+    document.getElementById('toast').textContent = 'Formulaire rempli à partir de la recherche';
+    document.getElementById('toast').classList.add('show'); setTimeout(()=>document.getElementById('toast').classList.remove('show'),1500);
+  };
+
+  // Wire view JSON toggle
+  document.getElementById('viewJson').onclick = ()=>{
+    if (jsonPre.style.display==='none') jsonPre.style.display='block'; else jsonPre.style.display='none';
+  };
 });
 
 document.getElementById('admissionForm').addEventListener('submit', async (e) => {
