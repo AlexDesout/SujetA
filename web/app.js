@@ -53,3 +53,35 @@ document.getElementById('admissionForm').addEventListener('submit', async (e) =>
   document.getElementById('openGit').addEventListener('click', ()=>{
     window.open('https://github.com/AlexDesout/SujetA','_blank');
   });
+
+  // Fill example patient for quicker data entry
+  document.getElementById('fillExample').addEventListener('click', ()=>{
+    document.getElementById('p_ins').value='285033155504217';
+    document.getElementById('p_family').value='Bernard';
+    document.getElementById('p_given').value='Claire';
+    document.getElementById('p_birth').value='1985-07-20';
+    document.getElementById('p_gender').value='F';
+    document.getElementById('p_phone').value='+33611223344';
+    document.getElementById('p_email').value='claire.bernard@example.com';
+    document.getElementById('p_address').value='12 rue de Test, Paris';
+    document.getElementById('encounter_id').value='enc-042';
+    document.getElementById('encounter_service').value='Consultation';
+    document.getElementById('author_name').value='Secrétaire';
+  });
+
+  // Simple client-side validation with friendly focus
+  document.getElementById('admissionForm').addEventListener('submit', (e)=>{
+    const required = ['p_family','p_given','p_birth'];
+    for(const id of required){
+      const el = document.getElementById(id);
+      if(!el.value){
+        e.preventDefault();
+        el.focus();
+        document.getElementById('toast').textContent = 'Merci de remplir les champs obligatoires.';
+        document.getElementById('toast').classList.add('show');
+        setTimeout(()=>document.getElementById('toast').classList.remove('show'),2000);
+        return false;
+      }
+    }
+    return true;
+  });

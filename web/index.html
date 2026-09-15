@@ -21,34 +21,36 @@
     <main class="container">
       <section class="card">
         <h1>Recherche patient</h1>
-        <form id="searchForm" class="grid">
+        <form id="searchForm" class="grid" aria-label="Recherche patient">
           <div>
             <label for="ins">INS</label>
-            <input id="ins" name="ins" placeholder="285033155504217" />
+            <input id="ins" name="ins" placeholder="Entrez le numéro INS" aria-describedby="insHelp" autofocus />
+            <div id="insHelp" class="help">Saisir l'INS (ex: 285033155504217). Le champ est facultatif pour nouvelle admission.</div>
           </div>
-          <div class="controls">
+          <div class="controls" style="align-self:end">
             <button type="submit">Rechercher</button>
             <div style="flex:1"></div>
           </div>
         </form>
-        <pre id="result" class="card" style="margin-top:12px"></pre>
+        <pre id="result" class="card" style="margin-top:12px">Résultats de recherche...</pre>
       </section>
 
       <section class="card">
         <h2>Formulaire d'admission</h2>
-        <form id="admissionForm">
+        <form id="admissionForm" aria-label="Formulaire admission">
           <div class="grid">
             <div>
               <label for="p_ins">INS</label>
-              <input id="p_ins" name="p_ins" required />
+              <input id="p_ins" name="p_ins" required placeholder="285033155504217" />
+              <div class="help">Numéro de sécurité sociale (ou INS local). Laisser vide si inconnu.</div>
             </div>
             <div>
               <label for="p_family">Nom</label>
-              <input id="p_family" name="p_family" required />
+              <input id="p_family" name="p_family" required placeholder="Ex: Martin" />
             </div>
             <div>
               <label for="p_given">Prénom</label>
-              <input id="p_given" name="p_given" required />
+              <input id="p_given" name="p_given" required placeholder="Ex: Sophie" />
             </div>
             <div>
               <label for="p_birth">Date de naissance</label>
@@ -56,36 +58,37 @@
             </div>
             <div>
               <label for="p_gender">Genre</label>
-              <select id="p_gender"><option value="M">M</option><option value="F">F</option><option value="other">other</option></select>
+              <select id="p_gender"><option value="F">F</option><option value="M">M</option><option value="other">Autre</option></select>
             </div>
             <div>
               <label for="p_phone">Téléphone</label>
-              <input id="p_phone" name="p_phone" />
+              <input id="p_phone" name="p_phone" placeholder="Mobile ou fixe" />
             </div>
             <div>
               <label for="p_email">Email</label>
-              <input id="p_email" name="p_email" type="email" />
+              <input id="p_email" name="p_email" type="email" placeholder="exemple@domaine.fr" />
             </div>
             <div>
               <label for="p_address">Adresse</label>
-              <input id="p_address" name="p_address" />
+              <input id="p_address" name="p_address" placeholder="Numéro, rue, ville" />
             </div>
             <div>
-              <label for="encounter_id">Encounter ID</label>
-              <input id="encounter_id" name="encounter_id" />
+              <label for="encounter_id">Dossier / Encounter ID</label>
+              <input id="encounter_id" name="encounter_id" placeholder="ex: enc-001" />
             </div>
             <div>
               <label for="encounter_service">Service</label>
-              <input id="encounter_service" name="encounter_service" />
+              <input id="encounter_service" name="encounter_service" placeholder="ex: Urgences" />
             </div>
             <div>
-              <label for="author_name">Auteur</label>
-              <input id="author_name" name="author_name" />
+              <label for="author_name">Saisie par</label>
+              <input id="author_name" name="author_name" placeholder="Nom du secrétaire / médecin" />
             </div>
           </div>
           <div style="margin-top:12px" class="controls">
-            <button type="submit">Soumettre l'admission</button>
-            <button type="button" id="resetForm" class="secondary">Réinitialiser</button>
+            <button type="submit">Enregistrer l'admission</button>
+            <button type="button" id="resetForm" class="secondary">Effacer</button>
+            <button type="button" id="fillExample" class="secondary">Exemple</button>
           </div>
         </form>
       </section>
