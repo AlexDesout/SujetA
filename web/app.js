@@ -56,12 +56,49 @@ document.getElementById('searchForm').addEventListener('submit', async (e) => {
     document.getElementById('p_email').value = (patient.telecom && patient.telecom.find(t=>t.system==='email')) ? patient.telecom.find(t=>t.system==='email').value : '';
     if (patient.address && patient.address[0]) document.getElementById('p_address').value = (patient.address[0].line || []).join(' ')+ (patient.address[0].city? ', '+patient.address[0].city : '');
     document.getElementById('toast').textContent = 'Formulaire rempli à partir de la recherche';
+    // highlight changed fields
+    const changed = ['p_ins','p_family','p_given','p_birth','p_gender','p_phone','p_email','p_address'];
+    for(const cid of changed){
+      const el = document.getElementById(cid);
+      if(!el) continue;
+      el.classList.remove('field-highlight');
+      // trigger reflow to restart animation
+      void el.offsetWidth;
+      el.classList.add('field-highlight');
+    }
     document.getElementById('toast').classList.add('show'); setTimeout(()=>document.getElementById('toast').classList.remove('show'),1500);
   };
 
   // Wire view JSON toggle
   document.getElementById('viewJson').onclick = ()=>{
     if (jsonPre.style.display==='none') jsonPre.style.display='block'; else jsonPre.style.display='none';
+  };
+
+  // Expose helper for console testing: window.fillFromPatient(patient)
+  window.fillFromPatient = function(p){
+    try{
+      const patientObj = p;
+      const id = (patientObj.identifier && patientObj.identifier[0] && patientObj.identifier[0].value) || '';
+      const family = (patientObj.name && patientObj.name[0] && patientObj.name[0].family) || '';
+      const given = (patientObj.name && patientObj.name[0] && patientObj.name[0].given) ? patientObj.name[0].given.join(' ') : '';
+      const dob = patientObj.birthDate || '';
+      const gender = patientObj.gender || '';
+      document.getElementById('p_ins').value = id;
+      document.getElementById('p_family').value = family;
+      document.getElementById('p_given').value = given;
+      if(dob) document.getElementById('p_birth').value = dob;
+      if(gender) document.getElementById('p_gender').value = (gender==='female'||gender==='F'||gender==='f') ? 'F' : (gender==='male'||gender==='M'||gender==='m') ? 'M' : 'other';
+      document.getElementById('p_phone').value = (patientObj.telecom && patientObj.telecom.find(t=>t.system==='phone')) ? patientObj.telecom.find(t=>t.system==='phone').value : '';
+      document.getElementById('p_email').value = (patientObj.telecom && patientObj.telecom.find(t=>t.system==='email')) ? patientObj.telecom.find(t=>t.system==='email').value : '';
+      if (patientObj.address && patientObj.address[0]) document.getElementById('p_address').value = (patientObj.address[0].line || []).join(' ')+ (patientObj.address[0].city? ', '+patientObj.address[0].city : '');
+      // add highlight
+      const changed = ['p_ins','p_family','p_given','p_birth','p_gender','p_phone','p_email','p_address'];
+      for(const cid of changed){
+        const el = document.getElementById(cid);
+        if(!el) continue; el.classList.remove('field-highlight'); void el.offsetWidth; el.classList.add('field-highlight');
+      }
+      return true;
+    }catch(e){console.error('fillFromPatient error', e); return false}
   };
 });
 

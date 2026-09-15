@@ -26,4 +26,13 @@ button.secondary{background:#6c757d}
 .field-row > div{flex:1}
 @media(max-width:720px){.grid{grid-template-columns:1fr}}
 
+/* Highlight when a field is auto-filled */
+.field-highlight{animation:highlightFade 2s ease-in-out}
+@keyframes highlightFade{
+	0%{background: #fff6d6}
+	60%{background: #fff6d6}
+	100%{background: var(--accent-compl)}
+}
+
+
 
