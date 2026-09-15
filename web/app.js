@@ -61,6 +61,14 @@ document.getElementById('admissionForm').addEventListener('submit', async (e) =>
     window.open('https://github.com/AlexDesout/SujetA','_blank');
   });
 
+  // Admin page quick-open
+  const openAdminBtn = document.createElement('button');
+  openAdminBtn.textContent = 'Administration';
+  openAdminBtn.className = 'secondary';
+  openAdminBtn.style.marginLeft = '8px';
+  openAdminBtn.addEventListener('click', ()=> window.open('/admin.html','_blank'));
+  document.querySelector('header .toolbar div:last-child').appendChild(openAdminBtn);
+
   // Fill example patient for quicker data entry
   document.getElementById('fillExample').addEventListener('click', ()=>{
     document.getElementById('p_ins').value='285033155504217';

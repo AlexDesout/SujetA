@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Admin - HL7</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main class="container">
+      <section class="card">
+        <h1>Administration - Messages HL7</h1>
+        <div class="field-row">
+          <div>
+            <label for="filterIns">Filtrer INS</label>
+            <input id="filterIns" placeholder="285033155504217" />
+          </div>
+          <div>
+            <label for="filterAuthor">Filtrer auteur</label>
+            <input id="filterAuthor" placeholder="Secrétaire" />
+          </div>
+          <div>
+            <label for="filterDup">Dupliqués</label>
+            <select id="filterDup"><option value="any">Tous</option><option value="true">Oui</option><option value="false">Non</option></select>
+          </div>
+        </div>
+        <div style="margin-top:12px;">
+          <button id="refresh">Rafraîchir</button>
+        </div>
+        <table id="list" style="width:100%;margin-top:12px;border-collapse:collapse">
+          <thead>
+            <tr><th>Fichier</th><th>INS</th><th>Auteur</th><th>Timestamp</th><th>Actions</th></tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </section>
+    </main>
+    <script src="admin.js"></script>
+  </body>
+</html>
