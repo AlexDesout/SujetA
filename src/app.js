@@ -2,8 +2,9 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs');
 const path = require('path');
-const { searchPatientByIns, submitTransaction } = require('./fhirClient');
+const { searchPatientByIns, submitTransaction, TransactionError, TransientError } = require('./fhirClient');
 const { generateAdtA04 } = require('./transformer');
+const { buildAdmissionBundle } = require('./bundleBuilder');
 // Optional S3 upload (requires AWS credentials in env to be set)
 let s3Client = null;
 if (process.env.AWS_S3_BUCKET && process.env.AWS_ACCESS_KEY_ID && process.env.AWS_SECRET_ACCESS_KEY) {
@@ -50,6 +51,23 @@ app.post('/api/admission', async (req, res) => {
     if (insVal && !/^[0-9]{13,15}$/.test(insVal)) {
       return res.status(400).json({ error: 'INS/NIR must be 13-15 digits' });
     }
+    // Construire le Bundle transactionnel et le soumettre au serveur FHIR
+    const serviceRequest = req.body.serviceRequest || {};
+    const bundle = buildAdmissionBundle(patient, encounter, serviceRequest);
+    try {
+      const txResult = await submitTransaction(bundle, { baseUrl: process.env.HAPI_FHIR_BASE || undefined });
+      // txResult mapping available for audit
+    } catch (err) {
+      if (err instanceof TransactionError) {
+        return res.status(400).json({ error: 'FHIR transaction failed', details: err.operationOutcome || err.message });
+      }
+      if (err instanceof TransientError) {
+        return res.status(502).json({ error: 'FHIR server unavailable', details: err.message });
+      }
+      return res.status(500).json({ error: err.message });
+    }
+
+    // Générer le HL7 après succès transactionnel
     const hl7 = generateAdtA04(patient, encounter, author);
 
     // Sauvegarder le HL7 dans out/ avec horodatage

@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Admission UI - SujetA</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main>
+      <h1>Admission - Recherche Patient</h1>
+      <section>
+        <form id="searchForm">
+          <label>INS: <input id="ins" name="ins" /></label>
+          <button type="submit">Rechercher</button>
+        </form>
+        <pre id="result"></pre>
+      </section>
+
+      <hr />
+
+      <h2>Formulaire d'admission (UI)</h2>
+      <section>
+        <form id="admissionForm">
+          <div>
+            <label>INS: <input id="p_ins" name="p_ins" required /></label>
+          </div>
+          <div>
+            <label>Nom: <input id="p_family" name="p_family" required /></label>
+            <label>Prénom: <input id="p_given" name="p_given" required /></label>
+          </div>
+          <div>
+            <label>Date de naissance: <input id="p_birth" name="p_birth" type="date" required /></label>
+            <label>Genre: <select id="p_gender"><option value="M">M</option><option value="F">F</option><option value="other">other</option></select></label>
+          </div>
+          <div>
+            <label>Téléphone: <input id="p_phone" name="p_phone" /></label>
+            <label>Email: <input id="p_email" name="p_email" type="email" /></label>
+          </div>
+          <div>
+            <label>Adresse: <input id="p_address" name="p_address" /></label>
+          </div>
+          <div>
+            <label>Encounter ID: <input id="encounter_id" name="encounter_id" /></label>
+            <label>Service: <input id="encounter_service" name="encounter_service" /></label>
+          </div>
+          <div>
+            <label>Auteur: <input id="author_name" name="author_name" /></label>
+          </div>
+          <div>
+            <button type="submit">Soumettre l'admission</button>
+          </div>
+        </form>
+        <h3>HL7 généré</h3>
+        <pre id="hl7result"></pre>
+      </section>
+    </main>
+    <script src="app.js"></script>
+  </body>
+</html>
