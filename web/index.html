@@ -9,9 +9,12 @@
   <body>
     <header>
       <div class="container toolbar">
-        <div>
-          <strong>Admission UI</strong>
-          <div class="muted">Prototype: saisie patient → ADT^A04</div>
+        <div style="display:flex;gap:12px;align-items:center">
+          <img src="/logo.svg" alt="logo" style="height:40px"/>
+          <div>
+            <strong>Admission - Accueil</strong>
+            <div class="help">Interface pour la saisie rapide des admissions (sécurisé, test)</div>
+          </div>
         </div>
         <div>
           <button id="openGit" class="secondary">Voir dépôt</button>
@@ -97,11 +100,14 @@
         <div style="display:flex;justify-content:space-between;align-items:center">
           <h3>HL7 généré</h3>
           <div class="controls">
-            <button id="copyHl7" class="secondary">Copier</button>
-            <button id="downloadHl7">Télécharger</button>
-          </div>
+              <button id="copyHl7" class="secondary">Copier</button>
+              <button id="downloadHl7">Télécharger</button>
+            </div>
         </div>
-        <pre id="hl7result" class="hl7box">(aucun message)</pre>
+          <pre id="hl7result" class="hl7box">(aucun message)</pre>
+          <div style="margin-top:8px">
+            <a id="savedLink" href="#" style="display:none">Télécharger le HL7 sauvegardé</a>
+          </div>
       </section>
 
       <div id="toast" class="toast">Copié !</div>

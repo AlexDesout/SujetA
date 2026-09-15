@@ -31,6 +31,13 @@ document.getElementById('admissionForm').addEventListener('submit', async (e) =>
     document.getElementById('hl7result').textContent = hl7;
     document.getElementById('toast').classList.add('show');
     setTimeout(()=>document.getElementById('toast').classList.remove('show'),1500);
+  // Show saved file link if server returned filename
+  if (data.savedFilename) {
+    const a = document.getElementById('savedLink');
+    a.href = `/out/${data.savedFilename}`;
+    a.style.display = 'inline-block';
+    a.textContent = `Télécharger ${data.savedFilename}`;
+  }
 });
 
   document.getElementById('resetForm').addEventListener('click', ()=>{
