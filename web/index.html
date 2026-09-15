@@ -7,13 +7,101 @@
     <link rel="stylesheet" href="styles.css">
   </head>
   <body>
-    <main>
-      <h1>Admission - Recherche Patient</h1>
-      <form id="searchForm">
-        <label>INS: <input id="ins" /></label>
-        <button type="submit">Rechercher</button>
-      </form>
-      <pre id="result"></pre>
+    <header>
+      <div class="container toolbar">
+        <div>
+          <strong>Admission UI</strong>
+          <div class="muted">Prototype: saisie patient → ADT^A04</div>
+        </div>
+        <div>
+          <button id="openGit" class="secondary">Voir dépôt</button>
+        </div>
+      </div>
+    </header>
+    <main class="container">
+      <section class="card">
+        <h1>Recherche patient</h1>
+        <form id="searchForm" class="grid">
+          <div>
+            <label for="ins">INS</label>
+            <input id="ins" name="ins" placeholder="285033155504217" />
+          </div>
+          <div class="controls">
+            <button type="submit">Rechercher</button>
+            <div style="flex:1"></div>
+          </div>
+        </form>
+        <pre id="result" class="card" style="margin-top:12px"></pre>
+      </section>
+
+      <section class="card">
+        <h2>Formulaire d'admission</h2>
+        <form id="admissionForm">
+          <div class="grid">
+            <div>
+              <label for="p_ins">INS</label>
+              <input id="p_ins" name="p_ins" required />
+            </div>
+            <div>
+              <label for="p_family">Nom</label>
+              <input id="p_family" name="p_family" required />
+            </div>
+            <div>
+              <label for="p_given">Prénom</label>
+              <input id="p_given" name="p_given" required />
+            </div>
+            <div>
+              <label for="p_birth">Date de naissance</label>
+              <input id="p_birth" name="p_birth" type="date" required />
+            </div>
+            <div>
+              <label for="p_gender">Genre</label>
+              <select id="p_gender"><option value="M">M</option><option value="F">F</option><option value="other">other</option></select>
+            </div>
+            <div>
+              <label for="p_phone">Téléphone</label>
+              <input id="p_phone" name="p_phone" />
+            </div>
+            <div>
+              <label for="p_email">Email</label>
+              <input id="p_email" name="p_email" type="email" />
+            </div>
+            <div>
+              <label for="p_address">Adresse</label>
+              <input id="p_address" name="p_address" />
+            </div>
+            <div>
+              <label for="encounter_id">Encounter ID</label>
+              <input id="encounter_id" name="encounter_id" />
+            </div>
+            <div>
+              <label for="encounter_service">Service</label>
+              <input id="encounter_service" name="encounter_service" />
+            </div>
+            <div>
+              <label for="author_name">Auteur</label>
+              <input id="author_name" name="author_name" />
+            </div>
+          </div>
+          <div style="margin-top:12px" class="controls">
+            <button type="submit">Soumettre l'admission</button>
+            <button type="button" id="resetForm" class="secondary">Réinitialiser</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <h3>HL7 généré</h3>
+          <div class="controls">
+            <button id="copyHl7" class="secondary">Copier</button>
+            <button id="downloadHl7">Télécharger</button>
+          </div>
+        </div>
+        <pre id="hl7result" class="hl7box">(aucun message)</pre>
+      </section>
+
+      <div id="toast" class="toast">Copié !</div>
     </main>
     <script src="app.js"></script>
   </body>
